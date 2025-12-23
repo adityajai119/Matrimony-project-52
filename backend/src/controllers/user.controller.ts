@@ -1,0 +1,2 @@
+import {db} from '../config/db';
+export const createUser=(r:any,s:any)=>{db.query('INSERT INTO users(name,age,gender,height,weight,goal) VALUES (?,?,?,?,?,?)',[r.body.name,r.body.age,r.body.gender,r.body.height,r.body.weight,r.body.goal],()=>s.json({msg:'ok'}));};
