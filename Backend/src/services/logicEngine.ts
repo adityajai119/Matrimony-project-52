@@ -126,7 +126,7 @@ export class LogicEngine {
 
         // Determine "last meal" based on current time
         const hour = new Date().getHours();
-        let lastMeal = null;
+        let lastMeal: any = null;
 
         if (meals) {
             if (hour < 11) lastMeal = meals.breakfast;
