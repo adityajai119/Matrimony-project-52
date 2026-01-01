@@ -1,5 +1,5 @@
 // Production environment
 export const environment = {
     production: true,
-    apiUrl: 'https://limitbreaker-production.up.railway.app/api'
+    apiUrl: 'https://limitbreaker-backend.onrender.com/api'
 };
