@@ -145,10 +145,12 @@ export async function initializeDatabase() {
       )
     `);
 
-    console.log('Database tables initialized successfully');
-  } catch (error) {
-    console.error('Error initializing database:', error);
-    throw error;
+    console.log('✅ Database tables initialized successfully');
+  } catch (error: any) {
+    // Don't crash app if MySQL isn't ready yet
+    console.error('❌ Database initialization error:', error.message || error);
+    console.log('⚠️ App will continue running - tables will be created on first successful connection');
+    // DO NOT throw - let app continue running
   }
 }
 

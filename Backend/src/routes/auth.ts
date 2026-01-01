@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import pool from '../config/database';
+import pool, { executeWithRetry } from '../config/database';
 import { RegisterRequest, LoginRequest } from '../types';
 import { EmailService } from '../services/emailService';
 
@@ -245,10 +245,9 @@ router.post('/google-login', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Email is required from Google' });
     }
 
-    // Check if user exists
-    const [users] = await pool.execute(
-      'SELECT * FROM Users WHERE email = ?',
-      [email]
+    // Check if user exists (with retry for Railway cold starts)
+    const [users] = await executeWithRetry(() =>
+      pool.execute('SELECT * FROM Users WHERE email = ?', [email])
     ) as any[];
 
 

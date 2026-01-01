@@ -4,8 +4,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 async function createDatabase() {
+  // Skip database creation in production (Railway creates DB automatically)
+  if (process.env.MYSQL_URL || process.env.NODE_ENV === 'production') {
+    console.log('✅ Using Railway MySQL - database already exists');
+    return;
+  }
+
   try {
-    // Connect without specifying database
+    // Connect without specifying database (local dev only)
     const connection = await mysql.createConnection({
       host: process.env.DB_HOST || 'localhost',
       user: process.env.DB_USER || 'root',
@@ -15,7 +21,7 @@ async function createDatabase() {
     // Create database if it doesn't exist
     await connection.execute(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME || 'smart_fitness'}`);
     console.log(`Database '${process.env.DB_NAME || 'smart_fitness'}' created or already exists`);
-    
+
     await connection.end();
   } catch (error) {
     console.error('Error creating database:', error);
@@ -35,4 +41,3 @@ if (require.main === module) {
 }
 
 export default createDatabase;
-
