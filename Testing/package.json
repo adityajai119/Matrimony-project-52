@@ -1,0 +1,11 @@
+{
+  "name": "smart-fitness-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Smart Fitness App",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

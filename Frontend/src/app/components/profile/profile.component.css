@@ -1,0 +1,360 @@
+/* Profile Container */
+.profile-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(102, 126, 234, 0.4);
+}
+
+.header-icon mat-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+}
+
+.header-text h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.header-text p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Profile Grid */
+/* Profile Grid */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  /* Reduced from 320px to prevent overflow */
+  gap: 20px;
+  /* Reduced gap */
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Main Card */
+.main-card {
+  padding: 24px !important;
+}
+
+.card-icon {
+  width: 48px !important;
+  height: 48px !important;
+  font-size: 28px !important;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #667eea !important;
+}
+
+.mat-mdc-card-header {
+  margin-bottom: 24px !important;
+}
+
+.mat-mdc-card-title {
+  color: #fff !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+
+.mat-mdc-card-subtitle {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 13px !important;
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Goal Section */
+.goal-section {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+}
+
+.section-header mat-icon {
+  color: #667eea;
+}
+
+.goal-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.goal-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.goal-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.goal-card.selected {
+  background: rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.goal-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.goal-icon.loss {
+  color: #f5576c;
+}
+
+.goal-icon.gain {
+  color: #38ef7d;
+}
+
+.goal-icon.maintain {
+  color: #667eea;
+}
+
+.goal-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  height: 52px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Side Cards */
+.side-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px !important;
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon.bmi {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+}
+
+.stat-icon.calories {
+  background: linear-gradient(135deg, rgba(242, 153, 74, 0.2) 0%, rgba(242, 201, 76, 0.2) 100%);
+}
+
+.stat-icon mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.stat-icon.bmi mat-icon {
+  color: #667eea;
+}
+
+.stat-icon.calories mat-icon {
+  color: #f2994a;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-status {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.stat-status.normal {
+  color: #38ef7d;
+}
+
+.stat-status.underweight {
+  color: #667eea;
+}
+
+.stat-status.overweight {
+  color: #f2994a;
+}
+
+.stat-status.obese {
+  color: #f5576c;
+}
+
+/* Tip Card */
+.tip-card {
+  padding: 20px !important;
+  background: linear-gradient(135deg, rgba(56, 239, 125, 0.1) 0%, rgba(17, 153, 142, 0.1) 100%) !important;
+  border: 1px solid rgba(56, 239, 125, 0.2) !important;
+}
+
+.tip-icon {
+  color: #38ef7d;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.tip-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #38ef7d;
+  margin-bottom: 8px;
+}
+
+.tip-card p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .side-cards {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .stat-card,
+  .tip-card {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-container {
+    padding: 20px;
+  }
+
+  .form-row,
+  .goal-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .header-text h1 {
+    font-size: 22px;
+  }
+}

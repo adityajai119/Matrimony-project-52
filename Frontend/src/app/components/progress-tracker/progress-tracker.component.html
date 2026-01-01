@@ -1,0 +1,139 @@
+<div class="progress-container animate-fade-in">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon>insights</mat-icon>
+      </div>
+      <div class="header-text">
+        <h1>Progress Tracker</h1>
+        <p>Monitor your fitness journey and stay motivated</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading && progressData">
+    <!-- Weekly Summary Cards -->
+    <div class="summary-cards">
+      <div class="summary-card exercises">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>fitness_center</mat-icon>
+          </div>
+          <span class="card-label">Exercises</span>
+        </div>
+        <div class="card-value">
+          <span class="current">{{ progressData.weeklyStats.exercisesCompleted }}</span>
+          <span class="divider">/</span>
+          <span class="total">{{ progressData.weeklyStats.totalExercises }}</span>
+        </div>
+        <div class="card-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getExerciseProgressPercentage()"></div>
+          </div>
+          <span class="progress-label">{{ getExerciseProgressPercentage().toFixed(0) }}% complete</span>
+        </div>
+      </div>
+
+      <div class="summary-card meals">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>restaurant</mat-icon>
+          </div>
+          <span class="card-label">Meals</span>
+        </div>
+        <div class="card-value">
+          <span class="current">{{ progressData.weeklyStats.mealsCompleted }}</span>
+          <span class="divider">/</span>
+          <span class="total">{{ progressData.weeklyStats.totalMeals }}</span>
+        </div>
+        <div class="card-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getMealProgressPercentage()"></div>
+          </div>
+          <span class="progress-label">{{ getMealProgressPercentage().toFixed(0) }}% complete</span>
+        </div>
+      </div>
+
+      <div class="summary-card calories">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>local_fire_department</mat-icon>
+          </div>
+          <span class="card-label">Calories</span>
+        </div>
+        <div class="card-value">
+          <span class="current">{{ progressData.weeklyStats.caloriesConsumed }}</span>
+          <span class="divider">/</span>
+          <span class="total">{{ progressData.weeklyStats.caloriesTarget }}</span>
+        </div>
+        <div class="card-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getCalorieProgressPercentage()"></div>
+          </div>
+          <span class="progress-label">{{ getCalorieProgressPercentage().toFixed(0) }}% of target</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weekly Chart (Chart.js) -->
+    <div class="chart-section">
+      <div class="section-header">
+        <h2><mat-icon>bar_chart</mat-icon> Weekly Overview</h2>
+      </div>
+      <div class="chart-container" style="height: 280px;">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" type="bar">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Daily Breakdown -->
+    <div class="daily-section">
+      <div class="section-header">
+        <h2><mat-icon>calendar_today</mat-icon> Daily Breakdown</h2>
+      </div>
+      <div class="daily-grid">
+        <div *ngFor="let day of progressData.dailyStats" class="daily-card">
+          <div class="daily-header">
+            <span class="daily-name">{{ day.day }}</span>
+            <span class="daily-score" [class]="getDayScoreClass(day)">
+              {{ getDayScore(day) }}%
+            </span>
+          </div>
+          <div class="daily-stats">
+            <div class="daily-stat">
+              <mat-icon>fitness_center</mat-icon>
+              <span>{{ day.exercisesCompleted }}/{{ day.totalExercises }}</span>
+            </div>
+            <div class="daily-stat">
+              <mat-icon>restaurant</mat-icon>
+              <span>{{ day.mealsCompleted }}/{{ day.totalMeals }}</span>
+            </div>
+            <div class="daily-stat">
+              <mat-icon>local_fire_department</mat-icon>
+              <span>{{ day.caloriesConsumed }} kcal</span>
+            </div>
+          </div>
+          <div class="daily-progress-bar">
+            <div class="fill" [style.width.%]="getDayScore(day)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="empty-state" *ngIf="!loading && !progressData">
+    <div class="empty-icon">
+      <mat-icon>insights</mat-icon>
+    </div>
+    <h2>No Progress Data Yet</h2>
+    <p>Start completing workouts and meals to see your progress!</p>
+    <button mat-raised-button color="primary" routerLink="/workouts">
+      <mat-icon>fitness_center</mat-icon>
+      Start Workout
+    </button>
+  </div>
+</div>

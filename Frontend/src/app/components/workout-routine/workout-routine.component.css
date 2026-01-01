@@ -1,0 +1,356 @@
+/* Workout Container */
+.workout-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(56, 239, 125, 0.4);
+}
+
+.header-icon mat-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+}
+
+.header-text h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.header-text p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Day Tabs */
+.day-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  overflow-x: auto;
+}
+
+.day-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 70px;
+}
+
+.day-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.day-tab.active {
+  background: linear-gradient(135deg, rgba(56, 239, 125, 0.15) 0%, rgba(17, 153, 142, 0.15) 100%);
+  border-color: #38ef7d;
+  color: #fff;
+}
+
+.day-tab.completed .day-short {
+  color: #38ef7d;
+}
+
+.day-short {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.day-progress {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* Day Header */
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.day-info h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.exercise-count {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Progress Ring */
+.day-progress-ring {
+  position: relative;
+  width: 70px;
+  height: 70px;
+}
+
+.circular-progress {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 3;
+}
+
+.circle-progress {
+  fill: none;
+  stroke: #38ef7d;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: 700;
+  color: #38ef7d;
+}
+
+/* Exercises Grid */
+.exercises-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.exercise-card {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(22, 33, 62, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.exercise-card:hover {
+  background: rgba(22, 33, 62, 1);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+}
+
+.exercise-card.completed {
+  background: rgba(56, 239, 125, 0.08);
+  border-color: rgba(56, 239, 125, 0.2);
+}
+
+.exercise-card.completed h3 {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.exercise-checkbox {
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.exercise-checkbox mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.exercise-card.completed .exercise-checkbox mat-icon {
+  color: #38ef7d;
+}
+
+.exercise-checkbox:hover mat-icon {
+  color: #38ef7d;
+  transform: scale(1.1);
+}
+
+.exercise-content {
+  flex: 1;
+}
+
+.exercise-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.exercise-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.meta-item mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: #38ef7d;
+}
+
+.exercise-instructions {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-icon {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, rgba(56, 239, 125, 0.1) 0%, rgba(17, 153, 142, 0.1) 100%);
+  border: 2px solid rgba(56, 239, 125, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(56, 239, 125, 0.2);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(56, 239, 125, 0.3);
+  }
+}
+
+.empty-icon mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.empty-state h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .workout-container {
+    padding: 20px;
+  }
+
+  .day-tabs {
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .day-tab {
+    padding: 10px 12px;
+    min-width: 50px;
+  }
+
+  .header-text h1 {
+    font-size: 22px;
+  }
+}

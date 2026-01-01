@@ -1,0 +1,120 @@
+<div class="workout-container animate-fade-in">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon>fitness_center</mat-icon>
+      </div>
+      <div class="header-text">
+        <h1>Weekly Workout Routine</h1>
+        <p>Your personalized training plan based on your goals</p>
+      </div>
+    </div>
+    <button mat-raised-button color="accent" (click)="regenerateWorkout()">
+      <mat-icon>auto_awesome</mat-icon>
+      AI Regenerate
+    </button>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <div class="workout-content" *ngIf="!loading && workouts.length > 0">
+    <div class="day-tabs">
+      <button *ngFor="let day of days; let i = index" class="day-tab" [class.active]="selectedDay === day"
+        [class.completed]="getCompletedExercisesCount(day) === getTotalExercisesCount(day) && getTotalExercisesCount(day) > 0"
+        (click)="onDayChange(i)">
+        <span class="day-short">{{ day.substring(0, 3) }}</span>
+        <span class="day-progress" *ngIf="getTotalExercisesCount(day) > 0">
+          {{ getCompletedExercisesCount(day) }}/{{ getTotalExercisesCount(day) }}
+        </span>
+      </button>
+    </div>
+
+    <div class="selected-day-content" *ngIf="getCurrentDayWorkout()">
+      <div class="day-header">
+        <div class="day-info">
+          <h2>{{ selectedDay }}</h2>
+          <span class="exercise-count">{{ getCurrentDayWorkout().exercises.length }} exercises</span>
+        </div>
+        <div class="day-progress-ring">
+          <svg viewBox="0 0 36 36" class="circular-progress">
+            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="circle-progress" [attr.stroke-dasharray]="getProgressDashArray(selectedDay)"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <span class="progress-text">{{ getProgressPercentage(selectedDay) }}%</span>
+        </div>
+      </div>
+
+      <!-- Workout Timer -->
+      <app-workout-timer></app-workout-timer>
+
+      <!-- Workout Music -->
+      <app-workout-music></app-workout-music>
+
+      <!-- 3D Equipment Showcase -->
+      <div class="equipment-showcase" style="margin-bottom: 30px;">
+        <h3 style="color: #fff; margin-bottom: 20px; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+          <mat-icon style="color: #6366f1;">3d_rotation</mat-icon>
+          Equipment Gallery
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+          <div style="text-align: center;">
+            <app-fitness-model equipmentType="dumbbell"></app-fitness-model>
+            <p style="color: #c8c8d8; margin-top: 10px; font-size: 14px;">Dumbbell</p>
+          </div>
+          <div style="text-align: center;">
+            <app-fitness-model equipmentType="barbell"></app-fitness-model>
+            <p style="color: #c8c8d8; margin-top: 10px; font-size: 14px;">Barbell</p>
+          </div>
+          <div style="text-align: center;">
+            <app-fitness-model equipmentType="kettlebell"></app-fitness-model>
+            <p style="color: #c8c8d8; margin-top: 10px; font-size: 14px;">Kettlebell</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercises-grid">
+        <div *ngFor="let exercise of getCurrentDayWorkout().exercises; let index = index" class="exercise-card"
+          [class.completed]="getCurrentDayWorkout().completed_status.exercises[index.toString()]">
+          <div class="exercise-checkbox" (click)="toggleExercise(selectedDay, index)">
+            <mat-icon
+              *ngIf="getCurrentDayWorkout().completed_status.exercises[index.toString()]">check_circle</mat-icon>
+            <mat-icon
+              *ngIf="!getCurrentDayWorkout().completed_status.exercises[index.toString()]">radio_button_unchecked</mat-icon>
+          </div>
+          <div class="exercise-content">
+            <h3>{{ exercise.name }}</h3>
+            <div class="exercise-meta">
+              <span class="meta-item">
+                <mat-icon>replay</mat-icon>
+                {{ exercise.sets }} sets
+              </span>
+              <span class="meta-item">
+                <mat-icon>repeat</mat-icon>
+                {{ exercise.reps }} reps
+              </span>
+            </div>
+            <p class="exercise-instructions">{{ exercise.instructions }}</p>
+
+            <!-- Video Tutorial -->
+            <app-exercise-video [exerciseName]="exercise.name"></app-exercise-video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && workouts.length === 0">
+    <div class="empty-icon">
+      <mat-icon>fitness_center</mat-icon>
+    </div>
+    <h2>No Workout Plan Yet</h2>
+    <p>Complete your profile to generate a personalized workout routine</p>
+    <button mat-raised-button color="primary" routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      Go to Profile
+    </button>
+  </div>
+</div>

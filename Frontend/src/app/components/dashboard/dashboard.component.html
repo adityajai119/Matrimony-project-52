@@ -1,0 +1,158 @@
+<div class="dashboard-container animate-fade-in">
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <mat-icon>dashboard</mat-icon>
+            </div>
+            <div class="header-text">
+                <h1>Smart Fit Dashboard</h1>
+                <p>Your AI-powered daily overview</p>
+            </div>
+            <div class="header-actions">
+                <button class="voice-btn" [class.listening]="isListening" (click)="toggleVoiceControl()"
+                    matTooltip="Voice Control">
+                    <mat-icon>{{ isListening ? 'mic' : 'mic_none' }}</mat-icon>
+                    <span class="voice-text" *ngIf="isListening">Listening...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skeleton Loading State -->
+    <div class="dashboard-grid" *ngIf="loading">
+        <mat-card class="dash-card">
+            <mat-card-header>
+                <app-skeleton width="120px" height="20px" type="text"></app-skeleton>
+            </mat-card-header>
+            <mat-card-content>
+                <div style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
+                    <app-skeleton width="48px" height="48px" type="circle"></app-skeleton>
+                    <app-skeleton width="80px" height="40px"></app-skeleton>
+                </div>
+                <app-skeleton width="100%" height="16px" type="text"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="dash-card">
+            <mat-card-header>
+                <app-skeleton width="140px" height="20px" type="text"></app-skeleton>
+            </mat-card-header>
+            <mat-card-content>
+                <div style="display: flex; gap: 12px; margin: 16px 0;">
+                    <app-skeleton width="100px" height="40px"></app-skeleton>
+                    <app-skeleton width="100px" height="40px"></app-skeleton>
+                    <app-skeleton width="100px" height="40px"></app-skeleton>
+                </div>
+                <app-skeleton width="100%" height="40px"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="dash-card full-width">
+            <mat-card-header>
+                <app-skeleton width="200px" height="24px" type="text"></app-skeleton>
+            </mat-card-header>
+            <mat-card-content>
+                <app-skeleton width="100%" height="16px" type="text"></app-skeleton>
+                <app-skeleton width="90%" height="16px" type="text" style="margin-top: 8px;"></app-skeleton>
+                <app-skeleton width="75%" height="16px" type="text" style="margin-top: 8px;"></app-skeleton>
+                <app-skeleton width="85%" height="16px" type="text" style="margin-top: 8px;"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="dashboard-grid" *ngIf="!loading">
+        <!-- GAMIFICATION ROW -->
+        <div class="gamification-row">
+            <!-- Power Level -->
+            <app-power-level></app-power-level>
+
+            <!-- Daily Challenge -->
+            <app-daily-challenge></app-daily-challenge>
+
+            <!-- Water Tracker -->
+            <app-water-tracker></app-water-tracker>
+        </div>
+
+        <!-- ADVANCED FEATURES ROW -->
+        <div class="gamification-row">
+            <!-- Streak Saver -->
+            <app-streak-saver></app-streak-saver>
+
+            <!-- Smart Rest -->
+            <app-smart-rest [fatigueLevel]="getFatiguePercent()" [workoutsThisWeek]="4"></app-smart-rest>
+
+            <!-- Theme Switcher -->
+            <app-theme-switcher></app-theme-switcher>
+        </div>
+
+        <!-- Streak Card -->
+        <mat-card class="dash-card streak-card">
+            <mat-card-header>
+                <mat-card-title>Consistency Streak</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="streak-display">
+                    <mat-icon class="fire-icon">local_fire_department</mat-icon>
+                    <span class="streak-count">{{ streak }}</span>
+                    <span class="streak-label">Days</span>
+                </div>
+                <p class="streak-msg" *ngIf="streak >= 5">🔥 You're on fire! Keep it up!</p>
+                <p class="streak-msg" *ngIf="streak < 5">Consistency is key. You got this!</p>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Fatigue Status -->
+        <mat-card class="dash-card fatigue-card">
+            <mat-card-header>
+                <mat-card-title>Fatigue Check-in</mat-card-title>
+                <mat-card-subtitle>How are you feeling today?</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="fatigue-options">
+                    <button mat-raised-button class="fatigue-btn low" [class.active]="fatigueLevel === 'Low'"
+                        (click)="updateFatigue('Low')">
+                        <mat-icon>battery_full</mat-icon> Fresh
+                    </button>
+                    <button mat-raised-button class="fatigue-btn medium" [class.active]="fatigueLevel === 'Medium'"
+                        (click)="updateFatigue('Medium')">
+                        <mat-icon>battery_5_bar</mat-icon> Moderate
+                    </button>
+                    <button mat-raised-button class="fatigue-btn high" [class.active]="fatigueLevel === 'High'"
+                        (click)="updateFatigue('High')">
+                        <mat-icon>battery_1_bar</mat-icon> Exhausted
+                    </button>
+                </div>
+                <p class="fatigue-info">
+                    <span *ngIf="fatigueLevel === 'High'">⚠️ Intense workouts will be replaced with recovery
+                        sessions.</span>
+                    <span *ngIf="fatigueLevel === 'Medium'">ℹ️ Volume will be slightly reduced.</span>
+                    <span *ngIf="fatigueLevel === 'Low'">✅ You're ready for full intensity!</span>
+                </p>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Achievement Badges -->
+        <app-achievement-badges class="full-width"></app-achievement-badges>
+
+        <!-- Leaderboard -->
+        <app-leaderboard></app-leaderboard>
+
+        <!-- AI Weekly Report -->
+        <mat-card class="dash-card report-card full-width">
+            <mat-card-header>
+                <div class="card-icon-header">
+                    <mat-icon>psychology</mat-icon>
+                </div>
+                <mat-card-title>Weekly AI Health Report</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="ai-report-content">
+                    <markdown [data]="healthAnalysis"></markdown>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button color="primary" (click)="downloadPDF()">
+                    <mat-icon>download</mat-icon> Download PDF
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="auth-container">
+  <!-- Power aura effects -->
+  <div class="power-effects">
+    <div class="aura-ring aura-1"></div>
+    <div class="aura-ring aura-2"></div>
+    <div class="aura-ring aura-3"></div>
+    <div class="ki-particles">
+      <div class="ki-particle"></div>
+      <div class="ki-particle"></div>
+      <div class="ki-particle"></div>
+      <div class="ki-particle"></div>
+      <div class="ki-particle"></div>
+    </div>
+  </div>
+
+  <div class="auth-layout">
+    <!-- Left Side: Goku Flying Nimbus -->
+    <div class="model-section model-left">
+      <div class="model-container">
+        <iframe title="Goku Flying Nimbus" frameborder="0" allowfullscreen mozallowfullscreen="true"
+          webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking"
+          src="https://sketchfab.com/models/8cf7d591a0144ab085d8b1e042ad7a6b/embed?ui_theme=dark&ui_controls=0&ui_infos=0&ui_stop=0&autostart=1&transparent=1">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Center: Login Form -->
+    <div class="auth-content">
+      <div class="auth-card animate-fade-in">
+        <!-- Power Level Header -->
+        <div class="auth-header">
+          <div class="power-icon">
+            <mat-icon class="logo-icon">bolt</mat-icon>
+            <div class="power-glow"></div>
+          </div>
+          <h1 class="power-title">POWER UP!</h1>
+          <p class="power-subtitle">Enter the arena and begin your training</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+          <mat-form-field appearance="outline" class="full-width power-field">
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix class="field-icon">email</mat-icon>
+            <input matInput type="email" formControlName="email" placeholder="warrior@saiyan.com">
+            <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+              Please enter a valid email
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width power-field">
+            <mat-label>Password</mat-label>
+            <mat-icon matPrefix class="field-icon">lock</mat-icon>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+              placeholder="Your secret technique">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+              Password must be at least 6 characters
+            </mat-error>
+          </mat-form-field>
+
+          <button mat-raised-button type="submit" class="power-btn" [disabled]="!loginForm.valid || loading">
+            <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+            <span *ngIf="!loading" class="btn-content">
+              <mat-icon>flash_on</mat-icon>
+              UNLEASH POWER
+            </span>
+          </button>
+        </form>
+
+        <!-- OR Divider -->
+        <div class="divider">
+          <span class="divider-line"></span>
+          <span class="divider-text">OR</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <!-- Google OAuth Button -->
+        <app-google-button></app-google-button>
+
+        <div class="auth-footer">
+          <p>New warrior? <a routerLink="/register" class="power-link">Join the Z-Fighters</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Goku Limitless Power -->
+    <div class="model-section model-right">
+      <div class="model-container">
+        <iframe title="Son Goku (Limitless Power)" frameborder="0" allowfullscreen mozallowfullscreen="true"
+          webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking"
+          src="https://sketchfab.com/models/e60cddef445f43b4a3f80fa00cbf11d8/embed?ui_theme=dark&ui_controls=0&ui_infos=0&ui_stop=0&autostart=1&transparent=1">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</div>

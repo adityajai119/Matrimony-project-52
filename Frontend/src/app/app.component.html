@@ -1,0 +1,60 @@
+<mat-toolbar class="navbar">
+  <div class="nav-brand">
+    <mat-icon class="brand-icon">fitness_center</mat-icon>
+    <span class="brand-text">Limit<span class="gradient-text">Breaker</span> 💪</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <nav class="nav-links" *ngIf="isAuthenticated()">
+    <a mat-button routerLink="/dashboard" routerLinkActive="active-link">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </a>
+    <a mat-button routerLink="/profile" routerLinkActive="active-link">
+      <mat-icon>person</mat-icon>
+      <span>Profile</span>
+    </a>
+    <a mat-button routerLink="/workouts" routerLinkActive="active-link">
+      <mat-icon>fitness_center</mat-icon>
+      <span>Workouts</span>
+    </a>
+    <a mat-button routerLink="/meals" routerLinkActive="active-link">
+      <mat-icon>restaurant</mat-icon>
+      <span>Meals</span>
+    </a>
+    <a mat-button routerLink="/progress" routerLinkActive="active-link">
+      <mat-icon>insights</mat-icon>
+      <span>Progress</span>
+    </a>
+    <button mat-button class="logout-btn" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </nav>
+
+  <nav class="auth-links" *ngIf="!isAuthenticated()">
+    <a mat-button routerLink="/login" routerLinkActive="active-link">
+      <mat-icon>login</mat-icon>
+      <span>Login</span>
+    </a>
+    <a mat-raised-button color="primary" routerLink="/register" class="register-btn">
+      <mat-icon>person_add</mat-icon>
+      <span>Register</span>
+    </a>
+  </nav>
+</mat-toolbar>
+
+<!-- Global Space Background (fixed behind everything) -->
+<app-three-scene sceneType="dashboard"></app-three-scene>
+
+<div class="content-wrapper">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- Floating AI Coach -->
+<app-ai-coach *ngIf="isAuthenticated()"></app-ai-coach>
+
+<!-- Power Up Animation (triggered on level up) -->
+<app-power-up-animation [trigger]="showPowerUp" [newLevel]="newPowerLevel" [newTitle]="newPowerTitle">
+</app-power-up-animation>

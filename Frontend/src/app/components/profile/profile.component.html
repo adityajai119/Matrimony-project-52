@@ -1,0 +1,131 @@
+<div class="profile-container animate-fade-in">
+  <app-three-scene sceneType="dashboard"
+    style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; opacity: 0.6;"></app-three-scene>
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon>person</mat-icon>
+      </div>
+      <div class="header-text">
+        <h1>Profile & Goals</h1>
+        <p>Manage your personal information and fitness objectives</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+    <mat-card class="profile-card main-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon">account_circle</mat-icon>
+        <mat-card-title>Personal Information</mat-card-title>
+        <mat-card-subtitle>Update your profile details</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Full Name</mat-label>
+              <mat-icon matPrefix>badge</mat-icon>
+              <input matInput formControlName="name" placeholder="Your name">
+              <mat-error *ngIf="profileForm.get('name')?.hasError('required')">Name is required</mat-error>
+            </mat-form-field>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Age</mat-label>
+                <mat-icon matPrefix>cake</mat-icon>
+                <input matInput type="number" formControlName="age">
+                <mat-error *ngIf="profileForm.get('age')?.errors">1-120</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Gender</mat-label>
+                <mat-icon matPrefix>wc</mat-icon>
+                <mat-select formControlName="gender">
+                  <mat-option *ngFor="let gender of genders" [value]="gender">{{ gender }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Height (cm)</mat-label>
+                <mat-icon matPrefix>height</mat-icon>
+                <input matInput type="number" formControlName="height">
+                <mat-error *ngIf="profileForm.get('height')?.errors">1-300</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Weight (kg)</mat-label>
+                <mat-icon matPrefix>monitor_weight</mat-icon>
+                <input matInput type="number" formControlName="weight">
+                <mat-error *ngIf="profileForm.get('weight')?.errors">1-500</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-section goal-section">
+            <div class="section-header">
+              <mat-icon>flag</mat-icon>
+              <span>Fitness Goal</span>
+            </div>
+            <div class="goal-cards">
+              <div *ngFor="let goal of goals" class="goal-card"
+                [class.selected]="profileForm.get('goal')?.value === goal"
+                (click)="profileForm.get('goal')?.setValue(goal)">
+                <mat-icon *ngIf="goal === 'weight loss'" class="goal-icon loss">trending_down</mat-icon>
+                <mat-icon *ngIf="goal === 'muscle gain'" class="goal-icon gain">fitness_center</mat-icon>
+                <mat-icon *ngIf="goal === 'maintenance'" class="goal-icon maintain">balance</mat-icon>
+                <span class="goal-label">{{ goal | titlecase }}</span>
+              </div>
+            </div>
+          </div>
+
+          <button mat-raised-button color="primary" type="submit" class="submit-btn"
+            [disabled]="!profileForm.valid || loading">
+            <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+            <mat-icon *ngIf="!loading">save</mat-icon>
+            <span *ngIf="!loading">Save Changes</span>
+          </button>
+        </form>
+
+        <!-- Activity Graph -->
+        <app-activity-graph></app-activity-graph>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="side-cards">
+      <mat-card class="stat-card">
+        <div class="stat-icon bmi">
+          <mat-icon>speed</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">BMI</span>
+          <span class="stat-value">{{ calculateBMI() }}</span>
+          <span class="stat-status" [class]="getBMIStatus().class">{{ getBMIStatus().label }}</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-icon calories">
+          <mat-icon>local_fire_department</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Daily Calories</span>
+          <span class="stat-value">{{ calculateDailyCalories() }}</span>
+          <span class="stat-status">Recommended intake</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="tip-card">
+        <mat-icon class="tip-icon">lightbulb</mat-icon>
+        <h3>Pro Tip</h3>
+        <p>Update your weight regularly to get more accurate meal and workout recommendations!</p>
+      </mat-card>
+
+      <!-- Share Your Progress -->
+      <app-share-card [powerLevel]="1" [title]="'Warrior'" [streak]="0" [exercisesCompleted]="0">
+      </app-share-card>
+    </div>
+  </div>
+</div>

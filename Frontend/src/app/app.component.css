@@ -1,0 +1,174 @@
+/* Navbar Styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 24px;
+  height: 70px;
+  background: rgba(5, 8, 20, 0.95) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 107, 53, 0.15);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.brand-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #ff6b35;
+}
+
+.brand-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #ff6b35 0%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.nav-links,
+.auth-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a,
+.auth-links a,
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px !important;
+  border-radius: 10px !important;
+  font-weight: 500;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7) !important;
+  transition: all 0.3s ease !important;
+}
+
+.nav-links a mat-icon,
+.auth-links a mat-icon,
+.logout-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-links a:hover,
+.auth-links a:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.nav-links a.active-link {
+  color: #fff !important;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.25) 0%, rgba(255, 215, 0, 0.2) 100%) !important;
+  box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
+  position: relative;
+}
+
+.nav-links a.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b35, #ffd700);
+  border-radius: 2px;
+  animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+
+  to {
+    width: 60%;
+    opacity: 1;
+  }
+}
+
+.logout-btn {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.logout-btn:hover {
+  color: #f5576c !important;
+  background: rgba(245, 87, 108, 0.15) !important;
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #ff6b35 0%, #ffd700 100%) !important;
+  color: #000 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.4) !important;
+}
+
+.register-btn:hover {
+  box-shadow: 0 0 30px rgba(255, 107, 53, 0.6), 0 0 50px rgba(255, 215, 0, 0.3) !important;
+  transform: translateY(-1px);
+}
+
+/* Main Content */
+.main-content {
+  min-height: calc(100vh - 70px);
+  margin-top: 70px;
+  background: transparent;
+}
+
+/* Content Wrapper - Prevents navbar collision */
+.content-wrapper {
+  padding-top: 80px;
+  /* Navbar height (70px) + 10px breathing room */
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  /* Content above 3D backgrounds */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .nav-links a span,
+  .auth-links a span,
+  .logout-btn span {
+    display: none;
+  }
+
+  .nav-links a,
+  .auth-links a,
+  .logout-btn {
+    padding: 10px !important;
+  }
+
+  .brand-text {
+    font-size: 18px;
+  }
+}

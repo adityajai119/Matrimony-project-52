@@ -1,0 +1,181 @@
+<div class="meal-container animate-fade-in">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon>restaurant</mat-icon>
+      </div>
+      <div class="header-text">
+        <h1>Meal Planner</h1>
+        <p>Track your nutrition and reach your calorie goals</p>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button mat-raised-button color="accent" (click)="regenerateMealPlan()">
+        <mat-icon>auto_awesome</mat-icon>
+        AI Regenerate
+      </button>
+      <button mat-stroked-button color="primary" (click)="exportGroceryList()">
+        <mat-icon>shopping_cart</mat-icon>
+        Grocery List
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <div class="meal-content" *ngIf="!loading && mealPlans.length > 0">
+    <div class="day-tabs">
+      <button *ngFor="let day of days; let i = index" class="day-tab" [class.active]="selectedDay === day"
+        [class.completed]="getCompletedMealsCount(day) === getTotalMealsCount(day) && getTotalMealsCount(day) > 0"
+        (click)="onDayChange(i)">
+        <span class="day-short">{{ day.substring(0, 3) }}</span>
+        <span class="day-progress" *ngIf="getTotalMealsCount(day) > 0">
+          {{ getCompletedMealsCount(day) }}/{{ getTotalMealsCount(day) }}
+        </span>
+      </button>
+    </div>
+
+    <div class="selected-day-content" *ngIf="getCurrentDayMealPlan()">
+      <!-- AI Food Scanner -->
+      <app-food-analysis (mealLogged)="onMealLogged($event)"></app-food-analysis>
+
+      <div class="calorie-summary">
+        <div class="calorie-info">
+          <div class="calorie-consumed">
+            <mat-icon>local_fire_department</mat-icon>
+            <div>
+              <span class="calorie-label">Consumed</span>
+              <span class="calorie-value">{{ getCaloriesConsumed(selectedDay) }}</span>
+            </div>
+          </div>
+          <div class="calorie-divider">of</div>
+          <div class="calorie-target">
+            <span class="calorie-value">{{ getCurrentDayMealPlan().meals.totalCalories }}</span>
+            <span class="calorie-label">kcal target</span>
+          </div>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="getCalorieProgressPercentage(selectedDay)"></mat-progress-bar>
+      </div>
+
+      <div class="meals-grid">
+        <!-- Breakfast -->
+        <div class="meal-card" [class.completed]="getCurrentDayMealPlan().completed_status.meals.breakfast">
+          <div class="meal-header">
+            <div class="meal-type">
+              <mat-icon>wb_sunny</mat-icon>
+              <span>Breakfast</span>
+            </div>
+            <div class="meal-actions">
+              <button mat-icon-button class="swap-btn"
+                (click)="triggerSmartSwap(getCurrentDayMealPlan().meals.breakfast.name)" matTooltip="AI Swap">
+                <mat-icon>cached</mat-icon>
+              </button>
+              <div class="meal-checkbox" (click)="toggleMeal(selectedDay, 'breakfast')">
+                <mat-icon *ngIf="getCurrentDayMealPlan().completed_status.meals.breakfast">check_circle</mat-icon>
+                <mat-icon
+                  *ngIf="!getCurrentDayMealPlan().completed_status.meals.breakfast">radio_button_unchecked</mat-icon>
+              </div>
+            </div>
+          </div>
+          <h3>{{ getCurrentDayMealPlan().meals.breakfast.name }}</h3>
+          <p class="meal-description">{{ getCurrentDayMealPlan().meals.breakfast.description }}</p>
+          <div class="meal-calories">
+            <mat-icon>local_fire_department</mat-icon>
+            {{ getCurrentDayMealPlan().meals.breakfast.calories }} kcal
+          </div>
+        </div>
+
+        <!-- Lunch -->
+        <div class="meal-card" [class.completed]="getCurrentDayMealPlan().completed_status.meals.lunch">
+          <div class="meal-header">
+            <div class="meal-type">
+              <mat-icon>wb_cloudy</mat-icon>
+              <span>Lunch</span>
+            </div>
+            <div class="meal-actions">
+              <button mat-icon-button class="swap-btn"
+                (click)="triggerSmartSwap(getCurrentDayMealPlan().meals.lunch.name)" matTooltip="AI Swap">
+                <mat-icon>cached</mat-icon>
+              </button>
+              <div class="meal-checkbox" (click)="toggleMeal(selectedDay, 'lunch')">
+                <mat-icon *ngIf="getCurrentDayMealPlan().completed_status.meals.lunch">check_circle</mat-icon>
+                <mat-icon
+                  *ngIf="!getCurrentDayMealPlan().completed_status.meals.lunch">radio_button_unchecked</mat-icon>
+              </div>
+            </div>
+          </div>
+          <h3>{{ getCurrentDayMealPlan().meals.lunch.name }}</h3>
+          <p class="meal-description">{{ getCurrentDayMealPlan().meals.lunch.description }}</p>
+          <div class="meal-calories">
+            <mat-icon>local_fire_department</mat-icon>
+            {{ getCurrentDayMealPlan().meals.lunch.calories }} kcal
+          </div>
+        </div>
+
+        <!-- Dinner -->
+        <div class="meal-card" [class.completed]="getCurrentDayMealPlan().completed_status.meals.dinner">
+          <div class="meal-header">
+            <div class="meal-type">
+              <mat-icon>nightlight</mat-icon>
+              <span>Dinner</span>
+            </div>
+            <div class="meal-actions">
+              <button mat-icon-button class="swap-btn"
+                (click)="triggerSmartSwap(getCurrentDayMealPlan().meals.dinner.name)" matTooltip="AI Swap">
+                <mat-icon>cached</mat-icon>
+              </button>
+              <div class="meal-checkbox" (click)="toggleMeal(selectedDay, 'dinner')">
+                <mat-icon *ngIf="getCurrentDayMealPlan().completed_status.meals.dinner">check_circle</mat-icon>
+                <mat-icon
+                  *ngIf="!getCurrentDayMealPlan().completed_status.meals.dinner">radio_button_unchecked</mat-icon>
+              </div>
+            </div>
+          </div>
+          <h3>{{ getCurrentDayMealPlan().meals.dinner.name }}</h3>
+          <p class="meal-description">{{ getCurrentDayMealPlan().meals.dinner.description }}</p>
+          <div class="meal-calories">
+            <mat-icon>local_fire_department</mat-icon>
+            {{ getCurrentDayMealPlan().meals.dinner.calories }} kcal
+          </div>
+        </div>
+      </div>
+
+      <!-- Snacks -->
+      <div class="snacks-section" *ngIf="getCurrentDayMealPlan().meals.snacks?.length > 0">
+        <h2 class="section-title">
+          <mat-icon>cookie</mat-icon>
+          Snacks
+        </h2>
+        <div class="snacks-grid">
+          <div *ngFor="let snack of getCurrentDayMealPlan().meals.snacks; let index = index" class="snack-card"
+            [class.completed]="getCurrentDayMealPlan().completed_status.meals.snacks?.[index.toString()]">
+            <div class="snack-checkbox" (click)="toggleMeal(selectedDay, 'snack', index)">
+              <mat-icon
+                *ngIf="getCurrentDayMealPlan().completed_status.meals.snacks?.[index.toString()]">check_circle</mat-icon>
+              <mat-icon
+                *ngIf="!getCurrentDayMealPlan().completed_status.meals.snacks?.[index.toString()]">radio_button_unchecked</mat-icon>
+            </div>
+            <div class="snack-content">
+              <h4>{{ snack.name }}</h4>
+              <span class="snack-calories">{{ snack.calories }} kcal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && mealPlans.length === 0">
+    <div class="empty-icon">
+      <mat-icon>restaurant</mat-icon>
+    </div>
+    <h2>No Meal Plan Yet</h2>
+    <p>Complete your profile to generate a personalized meal plan</p>
+    <button mat-raised-button color="primary" routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      Go to Profile
+    </button>
+  </div>
+</div>
