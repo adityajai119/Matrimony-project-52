@@ -123,5 +123,49 @@ router.patch('/:day/meals/:mealType', authenticateToken, async (req: AuthRequest
   }
 });
 
+// Update a specific meal with new data (for AI swap feature)
+router.put('/:day/:mealType', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId!;
+    const day = req.params.day;
+    const mealType = req.params.mealType as 'breakfast' | 'lunch' | 'dinner';
+    const newMealData = req.body;
+
+    if (!['breakfast', 'lunch', 'dinner'].includes(mealType)) {
+      return res.status(400).json({ error: 'Invalid meal type. Must be breakfast, lunch, or dinner.' });
+    }
+
+    const [plans] = await pool.execute(
+      'SELECT * FROM WorkoutMealPlans WHERE user_id = ? AND day = ?',
+      [userId, day]
+    ) as any[];
+
+    if (plans.length === 0) {
+      return res.status(404).json({ error: 'Meal plan not found for this day' });
+    }
+
+    const plan = plans[0];
+    const meals = typeof plan.meals === 'string' ? JSON.parse(plan.meals) : plan.meals;
+
+    // Update the specific meal
+    meals[mealType] = {
+      name: newMealData.name,
+      calories: newMealData.calories,
+      description: newMealData.description || newMealData.reason || ''
+    };
+
+    await pool.execute(
+      'UPDATE WorkoutMealPlans SET meals = ? WHERE user_id = ? AND day = ?',
+      [JSON.stringify(meals), userId, day]
+    );
+
+    console.log(`✅ Swapped ${mealType} for user ${userId} on ${day}`);
+    res.json({ message: 'Meal updated successfully', meals });
+  } catch (error: any) {
+    console.error('Update meal error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;
 

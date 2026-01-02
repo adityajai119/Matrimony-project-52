@@ -90,6 +90,11 @@ export class ApiService {
     return this.http.patch(`${API_URL}/meals/${day}/meals/${mealType}`, body);
   }
 
+  // Update a specific meal with new data
+  updateMeal(day: string, mealType: string, mealData: any): Observable<any> {
+    return this.http.put(`${API_URL}/meals/${day}/${mealType}`, mealData);
+  }
+
   // Progress
   getProgress(): Observable<any> {
     return this.http.get(`${API_URL}/progress`);

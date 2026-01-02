@@ -69,7 +69,8 @@
             </div>
             <div class="meal-actions">
               <button mat-icon-button class="swap-btn"
-                (click)="triggerSmartSwap(getCurrentDayMealPlan().meals.breakfast.name)" matTooltip="AI Swap">
+                (click)="triggerSmartSwap('breakfast', getCurrentDayMealPlan().meals.breakfast.name)"
+                matTooltip="AI Swap">
                 <mat-icon>cached</mat-icon>
               </button>
               <div class="meal-checkbox" (click)="toggleMeal(selectedDay, 'breakfast')">
@@ -96,7 +97,7 @@
             </div>
             <div class="meal-actions">
               <button mat-icon-button class="swap-btn"
-                (click)="triggerSmartSwap(getCurrentDayMealPlan().meals.lunch.name)" matTooltip="AI Swap">
+                (click)="triggerSmartSwap('lunch', getCurrentDayMealPlan().meals.lunch.name)" matTooltip="AI Swap">
                 <mat-icon>cached</mat-icon>
               </button>
               <div class="meal-checkbox" (click)="toggleMeal(selectedDay, 'lunch')">
@@ -123,7 +124,7 @@
             </div>
             <div class="meal-actions">
               <button mat-icon-button class="swap-btn"
-                (click)="triggerSmartSwap(getCurrentDayMealPlan().meals.dinner.name)" matTooltip="AI Swap">
+                (click)="triggerSmartSwap('dinner', getCurrentDayMealPlan().meals.dinner.name)" matTooltip="AI Swap">
                 <mat-icon>cached</mat-icon>
               </button>
               <div class="meal-checkbox" (click)="toggleMeal(selectedDay, 'dinner')">

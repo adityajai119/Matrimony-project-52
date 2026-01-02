@@ -163,14 +163,22 @@ export class MealPlannerComponent implements OnInit {
     });
   }
 
-  triggerSmartSwap(mealName: string) {
+  triggerSmartSwap(mealType: 'breakfast' | 'lunch' | 'dinner', mealName: string) {
     this.snackBar.open(`🍱 Asking Shenron for a "${mealName}" alternative...`, 'Close', { duration: 2000, panelClass: ['dbz-snackbar'] });
     this.aiService.swapMeal(mealName).subscribe({
       next: (res: any) => {
-        this.snackBar.open(`🌱 Shenron suggests: ${res.alternative.name}`, 'View Details', { duration: 5000, panelClass: ['dbz-snackbar'] })
-          .onAction().subscribe(() => {
-            alert(`Alternative: ${res.alternative.name}\nCal: ${res.alternative.calories}\nReason: ${res.alternative.reason}`);
-          });
+        // Auto-save the alternative meal to the database
+        this.apiService.updateMeal(this.selectedDay, mealType, res.alternative).subscribe({
+          next: () => {
+            this.snackBar.open(`🌱 Shenron granted: ${res.alternative.name}!`, 'Close', { duration: 3000, panelClass: ['dbz-snackbar'] });
+            // Reload meals to show the new meal
+            this.loadMeals();
+          },
+          error: (err: any) => {
+            console.error('Failed to save swapped meal:', err);
+            this.snackBar.open('💀 Failed to save the new meal!', 'Close', { duration: 3000, panelClass: ['dbz-snackbar'] });
+          }
+        });
       },
       error: (err: any) => {
         this.snackBar.open('💀 Shenron could not swap this meal!', 'Close', { duration: 3000, panelClass: ['dbz-snackbar'] });
