@@ -123,7 +123,10 @@ router.post('/verify-otp', async (req: Request, res: Response) => {
     }
 
     // OTP verified! Complete the registration
-    const userData = JSON.parse(pending.registration_data);
+    // Handle both string and object (MySQL JSON columns may return either)
+    const userData = typeof pending.registration_data === 'string'
+      ? JSON.parse(pending.registration_data)
+      : pending.registration_data;
     const { isGoogleUser, googleToken } = userData;
 
     let hashedPassword: string;
