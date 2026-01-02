@@ -16,7 +16,7 @@ export class EmailService {
         family: 4,
         logger: true,
         debug: true
-    });
+    } as any);
 
     static async sendProgressReport(userEmail: string, userName: string, data: any): Promise<void> {
         if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
