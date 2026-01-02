@@ -37,8 +37,8 @@ router.post('/generate-workout', authenticateToken, async (req, res) => {
 
         for (const day of days) {
             await pool.execute(
-                `UPDATE WorkoutPlans SET exercises = ?, completed_status = ? WHERE user_id = ? AND day = ?`,
-                [exercisesJson, defaultStatus, userId, day]
+                `UPDATE WorkoutMealPlans SET exercises = ?, completed_status = JSON_SET(completed_status, '$.exercises', JSON_OBJECT()) WHERE user_id = ? AND day = ?`,
+                [exercisesJson, userId, day]
             );
         }
 
@@ -71,8 +71,8 @@ router.post('/generate-meal', authenticateToken, async (req, res) => {
 
         for (const day of days) {
             await pool.execute(
-                `UPDATE MealPlans SET meals = ?, completed_status = ? WHERE user_id = ? AND day = ?`,
-                [mealsJson, defaultStatus, userId, day]
+                `UPDATE WorkoutMealPlans SET meals = ?, completed_status = JSON_SET(completed_status, '$.meals', JSON_OBJECT('breakfast', false, 'lunch', false, 'dinner', false, 'snacks', JSON_OBJECT())) WHERE user_id = ? AND day = ?`,
+                [mealsJson, userId, day]
             );
         }
 
