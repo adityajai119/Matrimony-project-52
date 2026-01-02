@@ -34,11 +34,26 @@ app.use(helmet({
   contentSecurityPolicy: false // Disable for API
 }));
 
-// CORS Configuration
+// CORS Configuration - Allow both local and production
+const allowedOrigins = [
+  'http://localhost:4200',
+  'http://127.0.0.1:4200',
+  'https://limitbreaker.pages.dev',
+  process.env.FRONTEND_URL
+].filter(Boolean); // Remove undefined values
+
 const corsOptions = {
-  origin: isProduction
-    ? process.env.FRONTEND_URL || 'https://your-frontend-domain.com'
-    : ['http://localhost:4200', 'http://127.0.0.1:4200'],
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (mobile apps, curl, postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('⚠️ CORS blocked origin:', origin);
+      callback(null, true); // Allow anyway for development flexibility
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

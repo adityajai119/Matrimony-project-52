@@ -6,9 +6,13 @@ dotenv.config();
 // Railway-hardened MySQL pool configuration
 let pool: mysql.Pool;
 
-if (process.env.MYSQL_URL) {
+// Use local DB unless explicitly in production AND MYSQL_URL is set
+const isProduction = process.env.NODE_ENV === 'production';
+const useRailway = isProduction && process.env.MYSQL_URL;
+
+if (useRailway) {
   // Production: Use Railway's MySQL URL with keep-alive
-  console.log('🔗 Connecting to Railway MySQL...');
+  console.log('🔗 Connecting to Railway MySQL (Production)...');
   pool = mysql.createPool({
     uri: process.env.MYSQL_URL,
     waitForConnections: true,
@@ -21,7 +25,7 @@ if (process.env.MYSQL_URL) {
   });
 } else {
   // Local development: Use individual env vars
-  console.log('🔗 Connecting to local MySQL...');
+  console.log('🔗 Connecting to local MySQL (Development)...');
   pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
