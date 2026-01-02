@@ -3,29 +3,87 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export class EmailService {
+    // Nodemailer transporter for local development
     private static transporter = nodemailer.createTransport({
-        service: 'gmail', // Use built-in Gmail preset
+        service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            rejectUnauthorized: false // Helps in some cloud environments
-        },
-        logger: true,
-        debug: true
+        }
     } as any);
 
-    static async sendProgressReport(userEmail: string, userName: string, data: any): Promise<void> {
-        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-            console.warn('⚠️ SMTP credentials missing. Email not sent.');
-            console.log('--- Mock Email Content ---');
-            console.log(`To: ${userEmail}`);
-            console.log('Subject: Your LimitBreaker Progress Report');
+    // Generic email sender that picks the right method
+    private static async sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
+        if (isProduction) {
+            // Use Brevo API in production
+            await this.sendViaBrevo(to, subject, htmlContent);
+        } else {
+            // Use Nodemailer locally
+            await this.sendViaNodemailer(to, subject, htmlContent);
+        }
+    }
+
+    // Brevo (Sendinblue) HTTP API - works on Render without SMTP blocking
+    private static async sendViaBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
+        const apiKey = process.env.BREVO_API_KEY;
+        const senderEmail = process.env.BREVO_SENDER_EMAIL || 'noreply@limitbreaker.app';
+
+        if (!apiKey) {
+            console.warn('⚠️ BREVO_API_KEY not set. Email not sent.');
+            console.log(`--- Mock Email (Brevo) ---\nTo: ${to}\nSubject: ${subject}`);
             return;
         }
 
+        console.log(`📧 Sending email via Brevo to ${to}...`);
+
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'api-key': apiKey,
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                sender: { name: 'LimitBreaker', email: senderEmail },
+                to: [{ email: to }],
+                subject: subject,
+                htmlContent: htmlContent
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Brevo API Error:', errorText);
+            throw new Error(`Brevo email failed: ${response.status}`);
+        }
+
+        console.log(`✅ Email sent via Brevo to ${to}`);
+    }
+
+    // Nodemailer for local development
+    private static async sendViaNodemailer(to: string, subject: string, htmlContent: string): Promise<void> {
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            console.warn('⚠️ SMTP credentials missing. Email not sent.');
+            console.log(`--- Mock Email (Nodemailer) ---\nTo: ${to}\nSubject: ${subject}`);
+            return;
+        }
+
+        const mailOptions = {
+            from: `"LimitBreaker" <${process.env.EMAIL_USER}>`,
+            to: to,
+            subject: subject,
+            html: htmlContent
+        };
+
+        await this.transporter.sendMail(mailOptions);
+        console.log(`✅ Email sent via Nodemailer to ${to}`);
+    }
+
+    // Send Progress Report
+    static async sendProgressReport(userEmail: string, userName: string, data: any): Promise<void> {
         const htmlContent = `
             <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
                 <div style="background: linear-gradient(135deg, #ff6b35, #f2c94c); padding: 20px; text-align: center; color: white;">
@@ -55,7 +113,7 @@ export class EmailService {
                     ` : '<p>No workout planned for today.</p>'}
 
                     <div style="text-align: center; margin-top: 30px;">
-                        <a href="http://localhost:4200" style="background: #ff6b35; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">Go to Dashboard</a>
+                        <a href="https://limitbreaker.pages.dev" style="background: #ff6b35; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">Go to Dashboard</a>
                     </div>
                 </div>
                 
@@ -65,32 +123,16 @@ export class EmailService {
             </div>
         `;
 
-        const mailOptions = {
-            from: `"LimitBreaker" <${process.env.EMAIL_USER}>`,
-            to: userEmail,
-            subject: `🚀 Progress Update: ${data.streak} Day Streak!`,
-            html: htmlContent
-        };
-
         try {
-            await this.transporter.sendMail(mailOptions);
-            console.log(`✅ Email sent to ${userEmail}`);
+            await this.sendEmail(userEmail, `🚀 Progress Update: ${data.streak} Day Streak!`, htmlContent);
         } catch (error) {
-            console.error('❌ Failed to send email:', error);
+            console.error('❌ Failed to send progress report:', error);
             throw new Error('Email sending failed');
         }
     }
 
     // Send OTP for email verification
     static async sendOTP(userEmail: string, otp: string): Promise<void> {
-        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-            console.warn('⚠️ SMTP credentials missing. Email not sent.');
-            console.log('--- Mock OTP Email ---');
-            console.log(`To: ${userEmail}`);
-            console.log(`OTP: ${otp}`);
-            return;
-        }
-
         const htmlContent = `
             <div style="font-family: Arial, sans-serif; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
                 <div style="background: linear-gradient(135deg, #ff6b35, #f2c94c); padding: 25px; text-align: center; color: white;">
@@ -110,21 +152,13 @@ export class EmailService {
                 </div>
                 
                 <div style="background: #333; color: #888; padding: 15px; text-align: center; font-size: 12px;">
-                    &copy; ${new Date().getFullYear()} Smart Fitness AI. All rights reserved.
+                    &copy; ${new Date().getFullYear()} LimitBreaker. All rights reserved.
                 </div>
             </div>
         `;
 
-        const mailOptions = {
-            from: `"LimitBreaker" <${process.env.EMAIL_USER}>`,
-            to: userEmail,
-            subject: `🔐 Your Verification Code: ${otp}`,
-            html: htmlContent
-        };
-
         try {
-            await this.transporter.sendMail(mailOptions);
-            console.log(`✅ OTP sent to ${userEmail}`);
+            await this.sendEmail(userEmail, `🔐 Your Verification Code: ${otp}`, htmlContent);
         } catch (error) {
             console.error('❌ Failed to send OTP:', error);
             throw new Error('OTP email sending failed');
