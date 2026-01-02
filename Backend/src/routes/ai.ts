@@ -2,6 +2,7 @@ import express from 'express';
 import { AIService } from '../services/aiService';
 import { LogicEngine } from '../services/logicEngine';
 import { authenticateToken } from '../middleware/auth';
+import pool from '../config/database';
 
 const router = express.Router();
 
@@ -28,6 +29,20 @@ router.post('/generate-workout', authenticateToken, async (req, res) => {
         const { lastMeal } = await LogicEngine.getRecentContext(userId);
 
         const workout = await AIService.generateWorkout(userId, type || 'home', lastMeal);
+
+        // Save the generated workout to ALL days in the database
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const exercisesJson = JSON.stringify(workout.exercises || []);
+        const defaultStatus = JSON.stringify({ exercises: {} });
+
+        for (const day of days) {
+            await pool.execute(
+                `UPDATE WorkoutPlans SET exercises = ?, completed_status = ? WHERE user_id = ? AND day = ?`,
+                [exercisesJson, defaultStatus, userId, day]
+            );
+        }
+
+        console.log(`✅ Saved AI workout for user ${userId}`);
         res.json({ workout });
     } catch (error: any) {
         console.error('❌ AI GENERATION FAILED:', error);
@@ -48,6 +63,20 @@ router.post('/generate-meal', authenticateToken, async (req, res) => {
         const { plannedWorkout } = await LogicEngine.getRecentContext(userId);
 
         const mealPlan = await AIService.generateMealPlan(userId, plannedWorkout);
+
+        // Save the generated meal plan to ALL days in the database
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const mealsJson = JSON.stringify(mealPlan);
+        const defaultStatus = JSON.stringify({ meals: { breakfast: false, lunch: false, dinner: false, snacks: {} } });
+
+        for (const day of days) {
+            await pool.execute(
+                `UPDATE MealPlans SET meals = ?, completed_status = ? WHERE user_id = ? AND day = ?`,
+                [mealsJson, defaultStatus, userId, day]
+            );
+        }
+
+        console.log(`✅ Saved AI meal plan for user ${userId}`);
         res.json({ mealPlan });
     } catch (error: any) {
         console.error('❌ MEAL GEN FAILED:', error);
