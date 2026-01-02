@@ -132,6 +132,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     .share-buttons {
       display: flex;
       justify-content: center;
+      margin-top: 20px;
+      padding-bottom: 10px;
     }
 
     .share-btn {
