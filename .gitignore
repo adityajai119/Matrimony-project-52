@@ -60,3 +60,13 @@ coverage/
 # ==================== Firebase ====================
 # Keep the service account key secret
 Backend/src/config/serviceAccountKey.json
+firebase-service-account.json
+**/serviceAccountKey.json
+**/firebase*.json
+!**/firebase.json
+
+# ==================== Render/Railway Secrets ====================
+render_env_value.txt
+**/render_env*.txt
+*.pem
+*.key
