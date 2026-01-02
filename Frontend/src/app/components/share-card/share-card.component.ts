@@ -26,20 +26,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
               <span>🔥 {{ streak }} Day Streak</span>
               <span>💪 {{ exercisesCompleted }} Exercises</span>
             </div>
+            
+            <!-- Button inside preview card -->
+            <button class="send-gmail-btn" (click)="sendEmail()" [disabled]="sending">
+              <mat-icon>email</mat-icon>
+              {{ sending ? 'Sending...' : 'Send to Gmail' }}
+            </button>
+            <p class="sent-msg" *ngIf="sent">✅ Email sent!</p>
           </div>
         </div>
       </div>
-
-      <div class="share-buttons">
-        <button class="share-btn gmail" (click)="sendEmail()" [disabled]="sending">
-          <span class="btn-icon">
-             <mat-icon>mail</mat-icon>
-          </span>
-          {{ sending ? 'Sending...' : 'Send to Gmail' }}
-        </button>
-      </div>
-
-      <p class="share-tip" *ngIf="sent">✅ Email sent successfully!</p>
     </div>
   `,
   styles: [`
@@ -127,6 +123,42 @@ import { MatSnackBar } from '@angular/material/snack-bar';
       gap: 20px;
       font-size: 12px;
       color: #b8c5d9;
+      margin-bottom: 15px;
+    }
+
+    .send-gmail-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #EA4335 0%, #C5221F 100%);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .send-gmail-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(234, 67, 53, 0.4);
+    }
+
+    .send-gmail-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .sent-msg {
+      color: #39ff14;
+      font-size: 12px;
+      margin-top: 10px;
+      text-align: center;
     }
 
     .share-buttons {
