@@ -6,16 +6,17 @@ dotenv.config();
 export class EmailService {
     private static transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // true for 465, false for other ports
+        port: 587,
+        secure: false, // upgrade later with STARTTLS
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         },
-        // Force IPv4 to avoid IPv6 timeouts in some cloud environments
-        family: 4,
+        family: 4, // Force IPv4
         logger: true,
-        debug: true
+        debug: true,
+        connectionTimeout: 10000, // 10s
+        socketTimeout: 10000
     } as any);
 
     static async sendProgressReport(userEmail: string, userName: string, data: any): Promise<void> {
