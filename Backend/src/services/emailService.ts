@@ -5,11 +5,17 @@ dotenv.config();
 
 export class EmailService {
     private static transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // true for 465, false for other ports
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
-        }
+        },
+        // Force IPv4 to avoid IPv6 timeouts in some cloud environments
+        family: 4,
+        logger: true,
+        debug: true
     });
 
     static async sendProgressReport(userEmail: string, userName: string, data: any): Promise<void> {
