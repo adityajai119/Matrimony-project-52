@@ -471,7 +471,7 @@ export class WorkoutMusicComponent implements OnInit, OnDestroy {
   }
 
   processWithAI(transcript: string): void {
-    this.snackBar.open(`🤖 Processing: "${transcript}"...`, '', { duration: 2000 });
+    this.snackBar.open(`🤖 Processing: "${transcript}"...`, '', { duration: 2000, panelClass: ['dbz-snackbar'] });
 
     this.aiService.parseVoiceIntent(transcript, this.tracks).subscribe({
       next: (response) => {
@@ -479,7 +479,7 @@ export class WorkoutMusicComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('AI Intent Error:', err);
-        this.snackBar.open('❌ Could not understand command', 'Close', { duration: 2000 });
+        this.snackBar.open('❌ Could not understand command', 'Close', { duration: 2000, panelClass: ['dbz-snackbar'] });
       }
     });
   }
@@ -498,10 +498,10 @@ export class WorkoutMusicComponent implements OnInit, OnDestroy {
 
         if (foundTrack) {
           this.playTrack(foundTrack);
-          this.snackBar.open(`🎵 Playing "${foundTrack.name}"`, '', { duration: 2000 });
+          this.snackBar.open(`🎵 Playing "${foundTrack.name}"`, '', { duration: 2000, panelClass: ['dbz-snackbar'] });
         } else {
           // Song not in playlist - generate playlist with that song
-          this.snackBar.open(`🔍 Searching for "${response.params?.songName}"...`, '', { duration: 2000 });
+          this.snackBar.open(`🔍 Searching for "${response.params?.songName}"...`, '', { duration: 2000, panelClass: ['dbz-snackbar'] });
           this.generatePlaylistForRequest(response.params?.songName, response.params?.artist);
         }
         break;
@@ -618,30 +618,30 @@ export class WorkoutMusicComponent implements OnInit, OnDestroy {
       case 'play':
         if (this.currentTrack) {
           this.isPlaying = true;
-          this.snackBar.open('▶️ Playing music', '', { duration: 1500 });
+          this.snackBar.open('▶️ Playing music', '', { duration: 1500, panelClass: ['dbz-snackbar'] });
         } else if (this.filteredTracks.length > 0) {
           this.playTrack(this.filteredTracks[0]);
         }
         break;
       case 'pause':
         this.isPlaying = false;
-        this.snackBar.open('⏸️ Music paused', '', { duration: 1500 });
+        this.snackBar.open('⏸️ Music paused', '', { duration: 1500, panelClass: ['dbz-snackbar'] });
         break;
       case 'stop':
         this.stopMusic();
-        this.snackBar.open('⏹️ Music stopped', '', { duration: 1500 });
+        this.snackBar.open('⏹️ Music stopped', '', { duration: 1500, panelClass: ['dbz-snackbar'] });
         break;
       case 'next':
         this.nextTrack();
-        this.snackBar.open('⏭️ Next track', '', { duration: 1500 });
+        this.snackBar.open('⏭️ Next track', '', { duration: 1500, panelClass: ['dbz-snackbar'] });
         break;
       case 'previous':
         this.previousTrack();
-        this.snackBar.open('⏮️ Previous track', '', { duration: 1500 });
+        this.snackBar.open('⏮️ Previous track', '', { duration: 1500, panelClass: ['dbz-snackbar'] });
         break;
       case 'shuffle':
         this.shuffleTracks();
-        this.snackBar.open('🔀 Playlist shuffled', '', { duration: 1500 });
+        this.snackBar.open('🔀 Playlist shuffled', '', { duration: 1500, panelClass: ['dbz-snackbar'] });
         break;
       case 'ai_playlist':
         this.getAIPlaylist();

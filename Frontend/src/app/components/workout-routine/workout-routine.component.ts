@@ -121,21 +121,23 @@ export class WorkoutRoutineComponent implements OnInit {
     this.loading = true;
     this.aiService.generateWorkout('home').subscribe({
       next: (workout: any) => {
-        // In a real app, we'd save this to the backend first
-        // For demo, we just update the current view
         const currentWorkout = this.getCurrentDayWorkout();
-        if (currentWorkout) {
-          currentWorkout.exercises = workout.workout.exercises; // Ensure structure matches AI response
-          this.apiService.updateWorkout(currentWorkout.day, currentWorkout.exercises).subscribe({
+        if (currentWorkout && workout.workout?.exercises) {
+          this.apiService.updateWorkout(currentWorkout.day, workout.workout.exercises).subscribe({
             next: () => {
               this.snackBar.open('🐉 Shenron has granted your new training regimen!', 'Close', { duration: 3000, panelClass: ['dbz-snackbar'] });
+              // Reload workouts to refresh the display
+              this.loadWorkouts();
             },
             error: (err) => {
               this.snackBar.open('💀 Failed to save training regimen!', 'Close', { duration: 5000, panelClass: ['dbz-snackbar'] });
+              this.loading = false;
             }
           });
+        } else {
+          this.snackBar.open('💀 Invalid workout data from Shenron!', 'Close', { duration: 3000, panelClass: ['dbz-snackbar'] });
+          this.loading = false;
         }
-        this.loading = false;
       },
       error: (err: any) => {
         this.snackBar.open('💀 Shenron could not grant your wish!', 'Close', { duration: 3000, panelClass: ['dbz-snackbar'] });
